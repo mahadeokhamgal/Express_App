@@ -17,9 +17,15 @@ router.post("", async (req, res) => {
         if(user.password != password) {
             res.status(401).send("Unauthorised!");
         } else {
-            const token = jwt.sign({username, email}, process.env.JWT_TOKEN_KEY);
+            const token = jwt.sign({username, email}, process.env.JWT_TOKEN_KEY, { expiresIn: '1m' });
             console.log(username, email, token);
-            res.status(200).send({accessToken : token});
+            res.cookie('auth_token', token, {
+              httpOnly: true,  // Makes the cookie accessible only by the server (prevents XSS attacks)
+              secure: true,    // Ensures the cookie is only sent over HTTPS (useful in production)
+              sameSite: 'Strict', // Protects against CSRF attacks by restricting cross-site cookie sending
+              maxAge: 60 * 60 * 1000, // Token expires after 1 hour (in milliseconds)
+            })
+            res.status(200).send("Login successfull!");
         }
       }
       

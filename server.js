@@ -15,6 +15,8 @@ mongoose.connect("mongodb://localhost:27017/user", {}).then(() => {
 })
 
 app.use(express.json())
+app.use("/login", loginRoute);
+
 app.use("", (req, res, next) => {
     const { jwt_token } = req.headers;
     const token = jwt_token;
@@ -32,7 +34,7 @@ app.use("", (req, res, next) => {
         })
     }
 })
-app.use("/login", loginRoute);
+
 app.use((req, res, next) => {
     console.log("req, res, next -> ");
     next();
