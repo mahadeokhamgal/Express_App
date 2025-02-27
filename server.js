@@ -1,15 +1,15 @@
 const express = require("express");
 const mongoose = require('mongoose');
-const { URL } = require("url");
-const { User } = require('./model/user.model.js');
 const jwt = require('jsonwebtoken');
 
 const loginRoute = require('./routes/login.js');
 const registerRoute = require('./routes/register.js');
+const userRoute = require('./routes/user.js')
+require("dotenv").config();
 
 app = express();
 
-mongoose.connect("mongodb://localhost:27017/user", {}).then(() => {
+mongoose.connect(process.env.MONGO_URL + process.env.MONGO_DB, {}).then(() => {
     console.log("mongoose connected");
 }).catch((err) => {
     console.log("error connecting mongoose");
@@ -20,7 +20,7 @@ app.use(express.json())
 app.use("/login", loginRoute);
 app.use("/register", registerRoute);
 
-app.use((req, res, next) => {
+const vaidate_jwt = (req, res, next) => {
     const { jwt_token } = req.headers;
     const token = jwt_token;
     if(!token) {
@@ -36,27 +36,11 @@ app.use((req, res, next) => {
             }
         })
     }
-})
+};
 
-app.use((req, res, next) => {
-    console.log("req, res, next -> ");
-    next();
-})
+app.use(vaidate_jwt);
 
-app.get("/user", async (req, res) => {
-    console.log("req received", req.url, req.params);
-    let url = new URL("http://localhost:3000"+req.url);
-    if(req.params.id == 2) {
-        throw new Error("cannot be two error");
-    } 
-    const users = await User.find({}).select('-password');
-    users.forEach(u => {
-        delete u.password;
-    })
-    res.status(200).json(users);
-})
-
-
+app.use("/user", userRoute)
 
 app.use((err, req, res, next) => {
     console.error(err);
