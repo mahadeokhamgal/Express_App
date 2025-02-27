@@ -1,8 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const jwt = require('jsonwebtoken');
-const { User } = require('./user.model.js');
-const { userSchema } = require('./schemas.js');
+const { User } = require('../model/user.model.js');
+const { userSchema } = require('../schema/schemas.js');
 require("dotenv").config();
 
 router.post("", async (req, res) => {

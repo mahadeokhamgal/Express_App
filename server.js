@@ -1,11 +1,11 @@
 const express = require("express");
 const mongoose = require('mongoose');
 const { URL } = require("url");
-const { User } = require('./user.model.js');
+const { User } = require('./model/user.model.js');
 const jwt = require('jsonwebtoken');
 
-const loginRoute = require('./login.js');
-const registerRoute = require('./register.js');
+const loginRoute = require('./routes/login.js');
+const registerRoute = require('./routes/register.js');
 
 app = express();
 
