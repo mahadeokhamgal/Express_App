@@ -1,16 +1,9 @@
 const express = require("express");
 const router = express.Router();
 const jwt = require('jsonwebtoken');
-const Joi = require("joi");
 const { User } = require('./user.model.js');
-
+const { userSchema } = require('./schemas.js');
 require("dotenv").config();
-
-const userSchema = Joi.object({
-  email: Joi.string().email().required(),
-  password: Joi.string().min(6).required(),
-  name: Joi.string().min(1).required(),
-})
 
 router.post("", async (req, res) => {
     console.log("login route");
