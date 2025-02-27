@@ -1,14 +1,29 @@
 const express = require("express");
 const router = express.Router();
 const jwt = require('jsonwebtoken');
+const Joi = require("joi");
 const { User } = require('./user.model.js');
 
 require("dotenv").config();
 
+const userSchema = Joi.object({
+  email: Joi.string().email().required(),
+  password: Joi.string().min(6).required(),
+  name: Joi.string().min(1).required(),
+})
+
 router.post("", async (req, res) => {
     console.log("login route");
-    const { username, email, password } = req.body;
+    
+
     try {
+      const { username, email, password } = req.body;
+      const { error } = userSchema.validate(req.body);
+      
+      if (error) {
+        return res.status(400).json({ error: error.details[0].message });
+      }
+
       const user = await User.findOne({ email: email });
       if(!user) {
         res.status(404).send("user not found!, need to register first");

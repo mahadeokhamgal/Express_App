@@ -5,6 +5,7 @@ const { User } = require('./user.model.js');
 const jwt = require('jsonwebtoken');
 
 const loginRoute = require('./login.js');
+const registerRoute = require('./register.js');
 
 app = express();
 
@@ -15,9 +16,11 @@ mongoose.connect("mongodb://localhost:27017/user", {}).then(() => {
 })
 
 app.use(express.json())
-app.use("/login", loginRoute);
 
-app.use("", (req, res, next) => {
+app.use("/login", loginRoute);
+app.use("/register", registerRoute);
+
+app.use((req, res, next) => {
     const { jwt_token } = req.headers;
     const token = jwt_token;
     if(!token) {
@@ -53,16 +56,7 @@ app.get("/user", async (req, res) => {
     res.status(200).json(users);
 })
 
-app.post('/register', async (req, res) => {
-    const { name, email, password } = req.body;
-    try {
-      const newUser = new User({ name, email, password });
-      await newUser.save();
-      res.status(201).send('User created successfully');
-    } catch (error) {
-      res.status(500).send('Error creating user: ' + error.message);
-    }
-  });
+
 
 app.use((err, req, res, next) => {
     console.error(err);
@@ -71,6 +65,5 @@ app.use((err, req, res, next) => {
 
 app.listen(3000, () => {
     console.log("server started on port 3000");
-    
 })
 
