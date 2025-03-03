@@ -1,10 +1,10 @@
 const express = require("express");
-const mongoose = require('mongoose');
-const jwt = require('jsonwebtoken');
+const mongoose = require("mongoose");
+const jwt = require("jsonwebtoken");
 
-const loginRoute = require('./routes/login.js');
-const registerRoute = require('./routes/register.js');
-const userRoute = require('./routes/user.js')
+const loginRoute = require("./routes/login.js");
+const registerRoute = require("./routes/register.js");
+const userRoute = require("./routes/user.js")
 require("dotenv").config();
 
 app = express();
@@ -51,3 +51,4 @@ app.listen(3000, () => {
     console.log("server started on port 3000");
 })
 
+module.exports = app;
